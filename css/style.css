@@ -1,0 +1,84 @@
+/* css/style.css — owner: CORE */
+/* Full-window black stage. The two canvases are stacked and letterboxed to 16:9 by AP.R.fit(),
+   which sets their CSS size and offset in pixels; the rules below are the no-JS defaults. */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+
+body {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+#stage {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  background: #000;
+  contain: strict;
+}
+
+#stage canvas {
+  position: absolute;
+  display: block;
+  /* default letterbox until AP.R.fit() runs: centred 16:9 box that fits the window */
+  width: min(100vw, calc(100vh * 16 / 9));
+  height: min(100vh, calc(100vw * 9 / 16));
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  outline: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Once AP.R.fit() has positioned the canvases in pixels it adds .fitted and the transform is dropped. */
+#stage.fitted canvas {
+  transform: none;
+}
+
+/* Shader background: rendered at reduced resolution and upscaled smoothly. */
+#bg {
+  z-index: 0;
+  background: #000;
+  image-rendering: auto;
+}
+
+/* Gameplay canvas: backing store is CSS size x devicePixelRatio, so it maps 1:1 to device pixels. */
+#game {
+  z-index: 1;
+  background: transparent;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* The cursor is hidden while a level is being played (AP.Scenes toggles this class). */
+#stage.playing,
+#stage.playing canvas {
+  cursor: none;
+}
+
+::selection {
+  background: transparent;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
